@@ -5,6 +5,7 @@ from models import Employee, Employer, Calendar
 from pymongo import MongoClient
 from typing import Optional
 from utils import check_pwd, hash_pwd, time_date
+from os import getenv
 
 
 app = FastAPI(
@@ -15,7 +16,9 @@ frontend of the ConTime Web Application",
 )
 
 """MongoDB SetUP"""
-client = MongoClient('mongodb+srv://root:root@cluster0.qgdv3.\
+user_name = getenv('MONGO_USER')
+pwd = getenv('MONGO_PWD')
+client = MongoClient(f'mongodb+srv://{user_name}:{pwd}@cluster0.qgdv3.\
 mongodb.net/ConTime?retryWrites=true&w=majority')
 db = client['ConTime']
 employer_collection = db['Employer']
