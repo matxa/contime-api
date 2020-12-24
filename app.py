@@ -113,7 +113,7 @@ def delete_user_by_type(user_type, email: str, password: str):
 
 
 @app.post("/add_employer")
-def add_employer(employer: Employer):
+async def add_employer(employer: Employer):
     """Insert Employer instance into the DataBase"""
     try:
         employer.hash_password()
@@ -124,7 +124,7 @@ def add_employer(employer: Employer):
 
 
 @app.post("/add_employee")
-def add_employee(employee: Employee):
+async def add_employee(employee: Employee):
     """Insert Employee instance into the DataBase"""
     employee_collection.insert_one(dict(employee))
     return employee
@@ -156,7 +156,7 @@ def get_all_employees_for_employer(email: str, password: str):
 
 
 @app.put("/employer/change_password")
-def get_all_employees_for_employer(email: str, password: str, new_pwd: str):
+async def get_all_employees_for_employer(email: str, password: str, new_pwd: str):
     """Change Employer user's password"""
 
     employer = employer_collection.find_one({'email': email})
@@ -222,7 +222,7 @@ def all_employers_calendar(user_type, email: str, password: str):
 
 
 @app.put("/calendar/current_week")
-def current_calendar_week(email: str, password: str, curr_calendar: Calendar):
+async def current_calendar_week(email: str, password: str, curr_calendar: Calendar):
     """Create or Update current week's calendar"""
     calendar = None
 
@@ -230,7 +230,7 @@ def current_calendar_week(email: str, password: str, curr_calendar: Calendar):
     if employee is None:
         return {"error": f"Invalid email"}
     if password == employee['id']:
-        dt_calendar = time_date()
+        dt_calendar = await time_date()
         w_id = f"{dt_calendar[1]}|{employee['id']}|{employee['employer_id']}"
         calendar = calendar_collection.find_one({"week_id": w_id})
         if calendar is None:
